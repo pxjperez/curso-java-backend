@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h1>LOGIN USUARIO</h1>
+        <form action="logear" method="post">
+            <label>Usuario:</label> <input type="text" name="user" id="user"><br>
+            <label>Password:</label> <input type="password" name="clave" id="clave"><br>
+            <input type="submit" value="INGRESAR"><br>
+            <label th:text="${msgError!=null} ? ${msgError}: ''" style="color: red" >
+            </label>
+        </form>
+    </body>
+</html>

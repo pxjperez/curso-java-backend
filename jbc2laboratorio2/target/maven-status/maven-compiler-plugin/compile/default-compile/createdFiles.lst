@@ -1,0 +1,5 @@
+edu\cibertec\bean\Persona.class
+edu\cibertec\config\DispatcherServlet.class
+edu\cibertec\config\WebConfig.class
+edu\cibertec\controller\SaludoController.class
+edu\cibertec\controller\PersonaController.class

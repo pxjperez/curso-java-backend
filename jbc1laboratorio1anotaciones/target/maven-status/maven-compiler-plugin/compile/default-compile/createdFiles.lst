@@ -1,0 +1,6 @@
+edu\cibertec\beans\HolaMundo.class
+edu\cibertec\beans\Conexion.class
+edu\cibertec\beans\ConexionMysql.class
+edu\cibertec\controller\Ejecutora.class
+edu\cibertec\beans\ConexionPostges.class
+edu\cibertec\config\AppConfig.class

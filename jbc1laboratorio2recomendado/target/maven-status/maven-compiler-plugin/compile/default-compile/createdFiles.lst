@@ -1,0 +1,10 @@
+edu\cibertec\service\ImpresoraServiceExcel.class
+edu\cibertec\controller\Ejecutora.class
+edu\cibertec\service\ImpresoraService.class
+edu\cibertec\service\ImpresoraServiceTexto.class
+edu\cibertec\repository\DocumentoExcel.class
+edu\cibertec\repository\MiDependencia.class
+edu\cibertec\config\AppConfig.class
+edu\cibertec\repository\Documento.class
+edu\cibertec\repository\DocumentoTexto.class
+edu\cibertec\repository\MiClase.class

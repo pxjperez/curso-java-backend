@@ -1,0 +1,11 @@
+edu\cibertec\controller\UsuarioController.class
+edu\cibertec\bean\Persona.class
+edu\cibertec\service\UsuarioService.class
+edu\cibertec\config\DispatcherServlet.class
+edu\cibertec\config\WebConfig.class
+edu\cibertec\bean\Usuario.class
+edu\cibertec\service\impl\UsuarioServiceImpl.class
+edu\cibertec\repository\UsuarioDao.class
+edu\cibertec\repository\impl\UsuairoDaoImpl.class
+edu\cibertec\controller\SaludoController.class
+edu\cibertec\controller\PersonaController.class

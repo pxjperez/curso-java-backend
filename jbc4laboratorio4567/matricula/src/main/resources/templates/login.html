@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>LOGIN</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/estilos.css" rel="stylesheet">
+    </head>
+    <body>
+        <h1>LOGIN DE LA APLICACION</h1>
+        <div class="divImagenLogin">
+            <img class="imagenLogin" src="/img/key.png" alt="Acceso">
+        </div>
+        
+        <form  th:action="@{/login}" method="post">
+            <table>
+                <tr>
+                    <td>
+                        <label for="usuario">Usuario:</label>
+                    </td>
+                    <td>
+                        <input  type="text" id="usuario" name="usuario"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="clave">Password:</label>
+                    </td>
+                    <td>
+                        <input  type="password" id="clave" name="clave"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <input  type="submit" value="INGRESAR"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <h2><label th:if="${msgError}" th:text="${msgError}" style="color:red"></label></h2>
+    </body>
+</html>

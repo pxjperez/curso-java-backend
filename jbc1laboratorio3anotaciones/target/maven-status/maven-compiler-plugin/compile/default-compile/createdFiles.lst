@@ -1,0 +1,3 @@
+edu\cibertec\config\AppConfig.class
+edu\cibertec\beans\HolaMundo.class
+edu\cibertec\controller\Ejecutora.class

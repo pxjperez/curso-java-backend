@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+       default-init-method="iniciar" default-destroy-method="destruir"  default-lazy-init="true"
+>
+    <!-- -->
+    <context:component-scan base-package="edu.cibertec"/>
+    
+    <!--
+    <bean id="holaMundo" class="edu.cibertec.beans.HolaMundo" scope="prototype"
+          init-method="iniciarPrototype">
+        <property name="nombre" value="JUAN CALROS"></property>
+    </bean>
+    <bean id="holaMundoCicloVida" class="edu.cibertec.beans.HolaMundo"
+          init-method="iniciar" destroy-method="destruir">
+        <property name="nombre" value="JUAN CALROS"></property>
+    </bean>
+    -->
+    <!--
+    <bean id="holaMundo" class="edu.cibertec.beans.HolaMundo" scope="prototype" init-method="iniciarPrototype">
+        <property name="nombre" value="JUAN CALROS"></property>
+    </bean>
+    
+    <bean id="holaMundoCicloVida" class="edu.cibertec.beans.HolaMundo">
+        <property name="nombre" value="JUAN CALROS"></property>
+    </bean>
+    
+    <bean id="impresaraServiceGenerica" class="edu.cibertec.service.ImpresaraServiceGenerica" lazy-init="true" depends-on="documentoExcel,documentoTexto">
+        <constructor-arg ref="documentoTexto"/>
+    </bean>
+    <bean id="documentoExcel" class="edu.cibertec.beans.DocumentoExcel"/>
+    <bean id="documentoTexto" class="edu.cibertec.beans.DocumentoTexto"/>
+    -->
+</beans>

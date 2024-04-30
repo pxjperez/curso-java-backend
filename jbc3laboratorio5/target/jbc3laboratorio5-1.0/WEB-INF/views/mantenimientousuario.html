@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        
+        <h1>Mantenimiento Usuario</h1>   
+        <h4>Bienvenido <label th:text='${usuario.user}'></label></h4>
+        <table  border="1">
+            <thead>
+                <tr>
+                    <th><a th:href="@{mantenimientoUsuarioPag(pag=0,orden=nombreApellido)}">Nombre Completo</a></th>
+                    <th><a th:href="@{mantenimientoUsuarioPag(pag=0,orden=user)}">User</a></th>
+                    <th>Password</th>
+                    <th>Aciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user:${listaUsuarios}">
+                    <td th:text="${user.nombreApellido}"></td>
+                    <td th:text="${user.user}"></td>
+                    <td th:text="${user.clave}"></td>
+                    <td>
+                        <a th:href="@{'eliminarUsuario?idUsuario='+${user.idUsuario}}" onclick="confirm('¿Esta seguro de eliminar?')" >E</a> - 
+                        <a th:href="@{'mostrarEditarUsuario?idUsuario='+${user.idUsuario}}" >A</a> - 
+                        <a th:href="@{'mostrarFoto?idUsuario='+${user.idUsuario}}">F</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+            <br><label th:text="${msgError!=null} ? ${msgError}: ''"  style="color: red"></label>
+            <br><a th:if="${paginado=='1'}" th:href="@{mantenimientoUsuarioPag(pag=0,orden=${param.orden})}" >Anterior</a>/<a th:if="${paginado=='1'}" th:href="@{mantenimientoUsuarioPag(pag=1,orden=${param.orden})}" >Siguiente</a> 
+            <br><a href="mostrarCreaUsuario" >Crear Usuario</a>   
+            <br><a href="index">REGRESAR</a>
+    </body>
+</html>

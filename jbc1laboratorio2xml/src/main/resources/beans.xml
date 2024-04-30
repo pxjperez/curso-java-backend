@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+   
+    <bean id="documentoExcel" class="edu.cibertec.beans.DocumentoExcel"/>
+    <bean id="documentoTexto" class="edu.cibertec.beans.DocumentoTexto"/>
+    <bean id="impresoraService" class="edu.cibertec.service.ImpresoraService">
+        <property name="documento" ref="documentoExcel"/>
+    </bean>
+    <bean id="impresoraServiceExcel" class="edu.cibertec.service.ImpresoraService">
+        <constructor-arg name="documento" ref="documentoExcel"/>
+    </bean>
+    <bean id="impresoraServiceTexto" class="edu.cibertec.service.ImpresoraService">
+        <constructor-arg name="documento" ref="documentoTexto"/>
+    </bean>
+    <bean id="impresoraServiceTextoMetodo" class="edu.cibertec.service.ImpresoraService">
+          <property name="documento" ref="documentoTexto"/>
+    </bean>
+    <bean id="miDependencia" class="edu.cibertec.beans.MiDependencia"/>
+    <bean id="miClase" class="edu.cibertec.beans.MiClase">
+        <lookup-method name="instanciarMiDependencia" bean="miDependencia"/>
+    </bean>
+    
+    
+</beans>

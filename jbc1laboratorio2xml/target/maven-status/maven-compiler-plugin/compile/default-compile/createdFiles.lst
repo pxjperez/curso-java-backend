@@ -1,0 +1,7 @@
+edu\cibertec\controller\Ejecutora.class
+edu\cibertec\service\ImpresoraService.class
+edu\cibertec\beans\Documento.class
+edu\cibertec\beans\MiClase.class
+edu\cibertec\beans\DocumentoExcel.class
+edu\cibertec\beans\DocumentoTexto.class
+edu\cibertec\beans\MiDependencia.class
