@@ -1,0 +1,7 @@
+#COMANDOS UTILIZADOS
+npx create-react-app carritofrontend
+cd crarritofrontend/
+npm install axios react-router-dom
+npm update
+npm start
+

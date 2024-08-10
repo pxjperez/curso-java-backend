@@ -41,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/v1/cursos").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/v1/cursos/*").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/api/v1/cursos*").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "ruta swgger ui y ruta swgger doc").permitAll()
             .antMatchers("/**").permitAll()
             .and()
             .httpBasic();
