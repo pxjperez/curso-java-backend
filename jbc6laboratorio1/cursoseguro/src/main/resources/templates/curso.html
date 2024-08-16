@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>LISTAR CURSOS</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+    <h1>LISTAR CURSOS</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Fecha Inicio</th>
+                <th>Minimo alumnos</th>
+                <th>Inscritos</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="curso : ${listaCursos}">
+                <td th:text="${curso.idCurso}"></td>
+                <td th:text="${curso.nombreCurso}"></td>
+                <td th:text="${curso.fechaInicio}"></td>
+                <td th:text="${curso.alumnosMinimo}"></td>
+                <td th:text="${curso.alumnosActual}"></td>
+                <td th:text="${curso.estado}"></td>
+            </tr>
+        </tbody>
+    </table>
+    </body>
+</html>

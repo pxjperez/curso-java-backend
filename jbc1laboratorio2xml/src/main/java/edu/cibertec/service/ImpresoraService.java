@@ -4,33 +4,34 @@
  */
 package edu.cibertec.service;
 
-import edu.cibertec.beans.Documento;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import edu.cibertec.bean.Imprimible;
 
 /**
  *
  * @author jpere
  */
 public class ImpresoraService {
-    private Documento documento;
+    
+    private Imprimible documento;
 
     public ImpresoraService() {
     }
 
-    public ImpresoraService(Documento documento) {
+    public ImpresoraService(Imprimible documento) {
         this.documento = documento;
     }
 
-    public Documento getDocumento() {
+    public Imprimible getDocumento() {
         return documento;
     }
 
-    public void setDocumento(Documento documento) {
+    public void setDocumento(Imprimible documento) {
         this.documento = documento;
     }
     
-    public void imprimir(){
-        documento.imprimir();
+    public void imprimirDocumento(){
+        System.out.println(documento.imprimir());
     }
+    
+    
 }

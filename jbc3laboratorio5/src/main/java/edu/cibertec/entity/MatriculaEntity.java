@@ -4,6 +4,7 @@
  */
 package edu.cibertec.entity;
 
+import java.io.Serializable;
 import java.sql.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,24 +22,24 @@ import lombok.NoArgsConstructor;
  *
  * @author jpere
  */
-@Entity
-@Table(name = "matricula")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MatriculaEntity {
+@Entity
+@Table(name = "matricula")
+public class MatriculaEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idmatricula")//idMatricula => id_matricula
+    @Column(name = "idmatricula")
     private Integer idMatricula;
-    @Column(name = "fechamat")
-    private Date fechaMat;
+    @Column(name ="fechamat" )
+    private Date fechaMatricula;
     @OneToOne
-    @JoinColumn(name = "idusuario", updatable = false, nullable = false)
+    @JoinColumn(name = "idusuario", updatable = false,nullable = false)
     private UsuarioEntity usuario;
     @OneToOne
-    @JoinColumn(name = "idcurso", updatable = false, nullable = false)
+    @JoinColumn(name = "idcurso", updatable = false,nullable = false)
     private CursoEntity curso;
     @Column(name = "estado")
-    private Integer estado; 
+    private Integer estado;
 }

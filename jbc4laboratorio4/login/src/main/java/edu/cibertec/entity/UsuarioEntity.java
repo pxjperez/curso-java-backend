@@ -1,0 +1,60 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package edu.cibertec.entity;
+
+import java.util.Base64;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "usuario")
+public class UsuarioEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idusuario")
+    private Integer idUsuario;
+    @Size(min=3, max=30, message = "El tamaño tiene que estar entre 3 y 30")
+    @Column(name = "usuario")
+    private String user;
+    @NotBlank(message = "El password no puede estar vacio")
+    @NotNull(message = "El password no puede estar vacio")
+    @Size(min=1, max=30, message = "El password no puede estar vacio")
+    @Column(name = "clave")
+    private String password;
+    @NotBlank(message = "El nombre no puede estar vacio")
+    @NotNull(message = "El nombre no puede estar vacio")
+    @Size(min=1, max=30, message = "El nombre no puede estar vacio")
+    @Column(name = "nombreapellido")
+    private String nombreApellido;
+    @Column(name = "foto")
+    private byte[] foto;
+    @Column(name = "estado")
+    private Integer estado;
+    @Transient
+    private String fotoBase64;
+    
+    public String getFotoBase64(){
+        if(this.foto!=null){
+            return Base64.getEncoder().encodeToString(this.foto);
+        }else{
+            return "";
+        }
+        
+    }
+}

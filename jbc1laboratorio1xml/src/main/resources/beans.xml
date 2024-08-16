@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans 
-       http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <!--
-    <bean id="holaMundoBean" class="edu.cibertec.beans.HolaMundo" scope="prototype">
-    </bean>
-    -->
-    <bean id="holaMundoBean" class="edu.cibertec.beans.HolaMundo" >
-    </bean>
-    <bean id="holaMundoBeanConPropiedad" class="edu.cibertec.beans.HolaMundo">
-      <property name="nombre" value="JPEREZGIL"/>
-    </bean>
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+        
+        <bean id="holaMundoBean" class="edu.cibertec.service.HolaMundo"/>
+        <bean id="holaMundoBeanConPropiedades" class="edu.cibertec.service.HolaMundo"> <!-- Siguiero especificar que la creacion del bean es nueva por cada invocacion scope="prototype" --> 
+            <property name="nombre" value="Juan"/>
+        </bean>
+        <bean id="conexionMysql" class="edu.cibertec.service.ConexionMysql"/>
+        <bean id="conexionPostgres" class="edu.cibertec.service.ConexionPostgres"/>
 </beans>

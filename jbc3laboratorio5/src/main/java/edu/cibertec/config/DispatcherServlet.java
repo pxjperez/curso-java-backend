@@ -4,6 +4,7 @@
  */
 package edu.cibertec.config;
 
+
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
@@ -19,6 +20,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
@@ -30,49 +33,43 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = ("edu.cibertec"))
-@EnableJpaRepositories(basePackages="edu.cibertec.repository") //Para habililitar JPA
-@EnableTransactionManagement // Para habilitar el manejo de transancciones
-public class DispatcherServlet {
-//    //Mapear las vistas que se invocan en el controlador usando JSP
-//    @Bean
-//    public  InternalResourceViewResolver getInternalResourceViewResolver(){
-//        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-//        resolver.setPrefix("/WEB-INF/views/");
-//        resolver.setSuffix(".jsp");
-//        return resolver;
-//    }
-    
-    //Mapear las vistas que se invocan en el controlador usando el Thymeleaf
+@EnableJpaRepositories(basePackages = "edu.cibertec.repository")
+@EnableTransactionManagement
+public class DispatcherServlet implements WebMvcConfigurer{
+    //CONFIGURACION DE THYMELEAF - INICIO
     @Bean
-    public ServletContextTemplateResolver templateResolver(ServletContext servletContext) {
+    public ServletContextTemplateResolver templateResolver (ServletContext servletContext){
         ServletContextTemplateResolver resolver = new ServletContextTemplateResolver(servletContext);
         resolver.setPrefix("/WEB-INF/views/");
         resolver.setSuffix(".html");
         resolver.setTemplateMode("HTML");
+        resolver.setCharacterEncoding("UTF-8");
         return resolver;
     }
 
     @Bean
-    public SpringTemplateEngine templateEngine(ServletContext servletContext) {
-        SpringTemplateEngine resolverEngine = new SpringTemplateEngine();
-        resolverEngine.setTemplateResolver(templateResolver(servletContext));
-        return resolverEngine;
+    public SpringTemplateEngine templateEngine(ServletContext servletContext){
+        SpringTemplateEngine engine = new SpringTemplateEngine();
+        engine.setTemplateResolver(templateResolver(servletContext));
+        return engine;
     }
 
     @Bean
-    public ThymeleafViewResolver getThymeleafViewResolver(ServletContext servletContext) {
-        ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
-        viewResolver.setTemplateEngine(templateEngine(servletContext));
-        return viewResolver;
+    public ThymeleafViewResolver thymeleafViewResolver(ServletContext servletContext){
+        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
+        resolver.setTemplateEngine(templateEngine(servletContext));
+        return resolver;
     }
-
-    //Habilitar la carga de archivos
+    //CONFIGURACION DE THYMELEAF - FIN
+    
+    //CONFIGURACION DE CARGA DE ARCHIVOS - INICIO
     @Bean
-    public CommonsMultipartResolver multipartResolver() {
+    public CommonsMultipartResolver multipartResolver(){
         return new CommonsMultipartResolver();
     }
-
-    // Configurar Spring Data JPA */
+    //CONFIGURACION DE CARGA DE ARCHIVOS - FIN
+    
+    //CONFIGURACION A LA BD - INICIO
     @Bean
     public DriverManagerDataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -115,4 +112,13 @@ public class DispatcherServlet {
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         return transactionManager;
     }
+    //CONFIGURACION A LA BD - FIN
+    
+    //CONFIGURACION DE LOS ARCHIVOS ESTATICOS - INICIO 
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/**") // URL que quieres usar para acceder a tus archivos CSS
+                .addResourceLocations("/static/"); // Ruta en la que se encuentran tus archivos CSS dentro de tu proyecto
+    }
+    //CONFIGURACION DE LOS ARCHIVOS ESTATICOS - FIN
 }

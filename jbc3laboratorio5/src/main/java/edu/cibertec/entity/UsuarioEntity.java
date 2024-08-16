@@ -12,51 +12,49 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- *
- * @author jpere
- */
-@Entity
-@Table(name = "usuario")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "usuario")
 public class UsuarioEntity {
     @Id
-    //PARA MYSQL
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-//    //PARA VARIAS BD
-//    (1) @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-//    (2) @GenericGenerator(name = "native", strategy = "native")
-    @Column(name = "idusuario") //idUsuario // id_usuario
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idusuario")
     private Integer idUsuario;
-    @Column(name ="usuario",nullable = false)
-    @Size(min=3, max=20, message="El user debe de tener como minimo 3 caracteres y como maximo 20")
-    @NotNull(message="El user del usuario no puede ser nulo")
+    @Size(min=3, max=30, message = "El tamaño tiene que estar entre 3 y 30")
+    @Column(name = "usuario")
     private String user;
-    @Column(name ="clave",nullable = false)
-    @NotNull(message="El password del usuario no puede ser nulo")
-    @Size(min=1,message = "El password del usuario no puede estar en blanco")
-    private String clave;
-    @Column(name ="nombreapellido",nullable = false)
-    @NotNull(message="El nombre Completo del usuario no puede ser nulo")
-    @Size(min=1,message = "El nombre Completo del usuario no puede estar en blanco")
+    @NotBlank(message = "El password no puede estar vacio")
+    @NotNull(message = "El password no puede estar vacio")
+    @Size(min=1, max=30, message = "El password no puede estar vacio")
+    @Column(name = "clave")
+    private String password;
+    @NotBlank(message = "El nombre no puede estar vacio")
+    @NotNull(message = "El nombre no puede estar vacio")
+    @Size(min=1, max=30, message = "El nombre no puede estar vacio")
+    @Column(name = "nombreapellido")
     private String nombreApellido;
-    private byte[]  foto;
+    @Column(name = "foto")
+    private byte[] foto;
+    @Column(name = "estado")
+    private Integer estado;
     @Transient
-    private String foto64;    
-    public String getFoto64(){
-       if (this.foto != null) {
+    private String fotoBase64;
+    
+    public String getFotoBase64(){
+        if(this.foto!=null){
             return Base64.getEncoder().encodeToString(this.foto);
         }else{
-           return null;
-       }
+            return "";
+        }
+        
     }
-    
 }

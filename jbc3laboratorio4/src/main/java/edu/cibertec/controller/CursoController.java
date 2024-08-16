@@ -5,7 +5,9 @@
 package edu.cibertec.controller;
 
 import edu.cibertec.service.CursoService;
-import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,47 +22,58 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @SessionAttributes(value = {"usuario"})
 public class CursoController {
-
     @Autowired
     private CursoService cursoService;
-
-    @RequestMapping("cursoBusqueda")
-    public String cursoBusqueda() {
-        return "cursoBusqueda";
+    
+    @RequestMapping("mantenimientoCursos")
+    public String mantenimientoCursos(){
+        return "mantenimientoCursos";
     }
-
-    @RequestMapping("accionBuscarCurso")
-    public ModelAndView cursoBusqueda(HttpServletRequest request) {
-        ModelAndView mv = new ModelAndView("cursoBusqueda");
-        String tipoConsulta = request.getParameter("tipo");
-        if (tipoConsulta != null) {
-            switch (tipoConsulta) {
-                case "estado":
-                    Integer estado = Integer.parseInt(request.getParameter("estado"));
-                    mv.addObject("listaCurso", cursoService.consultarPorEstado(estado));
+    
+    @RequestMapping("cursoBusqueda")
+    public ModelAndView cursoBusqueda(HttpServletRequest request){
+        ModelAndView mv = new ModelAndView("mantenimientoCursos");
+        String tipo=request.getParameter("tipo");
+        if(tipo!=null){
+            switch (tipo) {
+                case "LISTAPORNOMBRECURSO":                    
+                    mv.addObject("listaCursos",cursoService.listarCursosPorNombreCurso(request.getParameter("nombreCurso1")));
                     break;
-                case "incompleto":
-                    mv.addObject("listaCurso", cursoService.abiertoIncompleto());
+                case "LISTAPORNOMBRECURSOYALUMNOSMINIMO":
+                    mv.addObject("listaCursos",cursoService.listarCursosPorNombreCursoAndAlumnosMinimo(request.getParameter("nombreCurso2"),Integer.valueOf(request.getParameter("alumnosMinimo"))));
                     break;
-                case "fecha":
-                    Date fecha = Date.valueOf(request.getParameter("fecha"));
-                    mv.addObject("listaCurso", cursoService.consultarPorFecha(fecha));
+                case "PORESTADO":
+                    mv.addObject("listaCursos",cursoService.consultarPorEstado(Integer.valueOf(request.getParameter("estado"))));
                     break;
-                case "faltante":
-                    Integer faltante = Integer.parseInt(request.getParameter("faltante"));
-                    mv.addObject("listaCurso", cursoService.consultarPorFaltantes(faltante));
+                case "ABIERTOINCOMPLETO":
+                    mv.addObject("listaCursos",cursoService.abiertoIncompleto());
                     break;
-                case "nombre":
-                    String cadena = request.getParameter("cadena");
-                    mv.addObject("listaCurso", cursoService.consultarPorNombre(cadena));
+                case "ABIERTOINCOMPLETONATIVO":
+                    mv.addObject("listaCursos",cursoService.abiertoIncompletoNativo());
                     break;
+                case "PORFECHA":
+                    try{
+                        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                        Date date = formatter.parse(request.getParameter("fecha"));
+                        mv.addObject("listaCursos",cursoService.consultarPorFecha(date));
+                    }catch(Exception ex){
+                        System.out.println("Ocurrio un error en la fecha");
+                        mv.addObject("listaCursos",null);
+                    }                    
+                    break;
+                case "FALTANTE":
+                    mv.addObject("listaCursos",cursoService.consultarFaltantes(Integer.valueOf(request.getParameter("cantidad"))));
+                    break;
+                case "PORNOMBRE":
+                    mv.addObject("listaCursos",cursoService.consultarPorNombre(request.getParameter("nombreCurso3")));
+                    break;
+                default:
+                    throw new AssertionError();
             }
         }else{
-            mv.addObject("msgError", "Estimado usuario por favor seleccione un tipo de busqueda");
-            
+            mv.addObject("listaCursos",null);
         }
-
         return mv;
     }
-
+    
 }

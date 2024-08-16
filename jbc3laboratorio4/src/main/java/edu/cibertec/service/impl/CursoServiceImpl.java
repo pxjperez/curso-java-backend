@@ -5,7 +5,6 @@
 package edu.cibertec.service.impl;
 
 import edu.cibertec.entity.CursoEntity;
-import edu.cibertec.entity.UsuarioEntity;
 import edu.cibertec.repository.CursoRepository;
 import edu.cibertec.service.CursoService;
 import java.util.Date;
@@ -18,13 +17,23 @@ import org.springframework.stereotype.Service;
  * @author jpere
  */
 @Service
-public class CursoServiceImpl implements CursoService {
+public class CursoServiceImpl implements CursoService{
 
     @Autowired
     private CursoRepository cursoRepository;
+    
+    @Override
+    public List<CursoEntity> listarCursosPorNombreCurso(String nombreCurso) {
+        return cursoRepository.findByNombreCursoContainingIgnoreCase(nombreCurso);
+    }
 
     @Override
-    public List<CursoEntity> consultarPorEstado(int estado) {
+    public List<CursoEntity> listarCursosPorNombreCursoAndAlumnosMinimo(String nombreCurso, Integer alumnosMinimo) {
+        return cursoRepository.findByNombreCursoAndAlumnosMinimo(nombreCurso, alumnosMinimo);
+    }
+
+    @Override
+    public List<CursoEntity> consultarPorEstado(Integer estado) {
         return cursoRepository.consultarPorEstado(estado);
     }
 
@@ -34,18 +43,23 @@ public class CursoServiceImpl implements CursoService {
     }
 
     @Override
-    public List<CursoEntity> consultarPorFecha(Date fechaInicio) {
-        return cursoRepository.consultarPorFecha(fechaInicio);
+    public List<CursoEntity> abiertoIncompletoNativo() {
+        return cursoRepository.abiertoIncompletoNativo();
     }
 
     @Override
-    public List<CursoEntity> consultarPorFaltantes(Integer cantidad) {
-        return cursoRepository.consultarPorFaltantes(cantidad);
+    public List<CursoEntity> consultarPorFecha(Date fecha) {
+        return cursoRepository.consultarPorFecha(fecha);
     }
 
     @Override
-    public List<CursoEntity> consultarPorNombre(String cadena) {
-        return cursoRepository.consultarPorNombre(cadena);
+    public List<CursoEntity> consultarFaltantes(Integer cantidad) {
+        return cursoRepository.consultarFaltantes(cantidad);
     }
 
+    @Override
+    public List<CursoEntity> consultarPorNombre(String nombre) {
+        return cursoRepository.consultarPorNombre(nombre);
+    }
+    
 }

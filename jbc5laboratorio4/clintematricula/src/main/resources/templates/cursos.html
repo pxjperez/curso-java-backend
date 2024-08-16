@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/style.css" rel="stylesheet">
+    </head>
+    <body>
+        <h1>MANTENIMIENTO DE CURSOS</h1>
+        <table border="1">
+            <tr>
+                <th>CODIGO</th>
+                <th>NOMBRE</th>
+                <th>FECHA INICIO</th>
+                <th>MINIMO ALUMNOS</th>
+                <th>INSCRITOS</th>
+                <th>ESTADO</th>
+                <th>ELIMINAR</th>
+            </tr>
+            <tr th:each="curso : ${listaCurso}">
+                <td th:text="${curso.idCurso}"></td>
+                <td th:text="${curso.nombreCurso}"></td>
+                <td th:text="${curso.fechaInicio}"></td>
+                <td th:text="${curso.alumnosMinimo}"></td>
+                <td th:text="${curso.alumnosActual}"></td>
+                <td th:text="${curso.estado}"></td>
+                <td><a th:href="@{|cursoEliminar?idCurso=| + ${curso.idCurso}}">E</a></td>
+            </tr>
+        </table>    
+    </body>
+</html>

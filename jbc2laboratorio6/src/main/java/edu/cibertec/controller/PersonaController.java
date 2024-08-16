@@ -4,30 +4,24 @@
  */
 package edu.cibertec.controller;
 
-import edu.cibertec.bean.Persona;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  *
  * @author jpere
  */
-@RestController
-@RequestMapping("persona")
+@Controller
+//@SessionAttributes("usuario") //De darce el caso que no se transporta la sesion entre controladores agregar la anotacion con la sesion que trabajaras
 public class PersonaController {
-
-    private List<Persona> personas;
-
-    @GetMapping
-    public List<Persona> listarPersonas() {
-        personas = new ArrayList<>();
-        personas.add(new Persona("JUAN", "PEREZ GIL", "71583403", "LOS DIAMANTES 1300", new Date()));
-        personas.add(new Persona("DANIEL", "DIAZ GIL", "45124563", "LOS PORTALES 1300", new Date()));
-        return personas;
+    
+    @RequestMapping("mantenimientoPersonas")
+    public ModelAndView mantenimientoPersonas() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("mantenimientoPersonas");
+        return mv;
     }
-
+    
 }

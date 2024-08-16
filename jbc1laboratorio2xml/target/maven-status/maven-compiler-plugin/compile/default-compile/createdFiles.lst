@@ -1,7 +1,9 @@
+edu\cibertec\bean\ConexionMysql.class
+edu\cibertec\bean\Imprimible.class
+edu\cibertec\bean\DocumentoExcel.class
+edu\cibertec\bean\ConexionPostgres.class
 edu\cibertec\controller\Ejecutora.class
+edu\cibertec\bean\HolaMundo.class
+edu\cibertec\bean\Conexion.class
+edu\cibertec\bean\DocumentoTexto.class
 edu\cibertec\service\ImpresoraService.class
-edu\cibertec\beans\Documento.class
-edu\cibertec\beans\MiClase.class
-edu\cibertec\beans\DocumentoExcel.class
-edu\cibertec\beans\DocumentoTexto.class
-edu\cibertec\beans\MiDependencia.class

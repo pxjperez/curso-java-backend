@@ -6,15 +6,14 @@ package edu.cibertec.controller;
 
 import edu.cibertec.entity.UsuarioEntity;
 import edu.cibertec.service.UsuarioService;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,169 +21,145 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 /**
  *
  * @author jpere
  */
 @Controller
-@SessionAttributes(value = {"usuario"})
+@SessionAttributes(value = {"usuario","path","metodo"})
 public class UsuarioController {
 
-    @Autowired
+    @Autowired //usuarioService= new UsuarioServiceImp();
     private UsuarioService usuarioService;
 
-    @RequestMapping("mantenimientoUsuario")
-    public String mantenimientoUsuario(Model modelo) {
-        if (usuarioService.listarUsuario().size() > 5) {
-            Pageable pagina = PageRequest.of(0, 5);
-            modelo.addAttribute("paginado", "1");
-            modelo.addAttribute("listaUsuarios", usuarioService.listarUsuario(pagina));
+    @RequestMapping("/")
+    public String login() {
+        return "login";
+    }
+
+    @RequestMapping("accionLogin")
+    public ModelAndView accionLogin(UsuarioEntity usuario, HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView();
+        usuario = usuarioService.validarUsuario(usuario);
+        ServletContext cxt=request.getServletContext();
+        if (usuario == null) {
+            mv.setViewName("login");
+            mv.addObject("msgError", "Usuario o contraseña invalidos");
         } else {
-            modelo.addAttribute("paginado", "0");
-            modelo.addAttribute("listaUsuarios", usuarioService.listarUsuario());
+            mv.addObject("usuario", usuario.getNombreApellido());
+            mv.addObject("path", cxt.getContextPath());
+            mv.addObject("metodo", request.getMethod());
+            mv.setViewName("redirect:paginaPrincipal");
         }
-        return "mantenimientousuario";
-    }
-
-    @RequestMapping("mantenimientoUsuarioPag")
-    public String mantenimientoUsuarioPag(@RequestParam("pag") int pag, @RequestParam(value = "orden", required = false) String orden, Model modelo) {
-        Pageable pagina = null;
-        if(orden==null|| orden.equalsIgnoreCase("null")){
-             pagina = PageRequest.of(pag, 5);
-        }else{
-             pagina = PageRequest.of(pag, 5,Sort.by(orden));
-        }        
-        modelo.addAttribute("paginado", "1");
-        modelo.addAttribute("listaUsuarios", usuarioService.listarUsuario(pagina));
-        return "mantenimientousuario";
-    }
-
-    @RequestMapping("mostrarCreaUsuario")
-    public ModelAndView mostrarCreaUsuario() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("crearusuario");
-        mv.addObject("usuario", new UsuarioEntity());
         return mv;
     }
 
-    @RequestMapping("mostrarEditarUsuario")
-    public String mostrarEditarUsuario(Integer idUsuario, Model model) {
-        model.addAttribute("usuario", usuarioService.obtenerUsuario(idUsuario));
-        return "editarusuario";
-    }
-
-    @RequestMapping(value = "registrarUsuario", consumes = MULTIPART_FORM_DATA_VALUE)
-    //Tener cuidado al momento de usar CommonsMultipartFile se utiliza solo cuando vamos a enviar archivos cuando conbinamos datos con archivos es MultipartFile
-    public ModelAndView registrarUsuario(@RequestParam(value = "archivo", required = false) MultipartFile archivo, @Valid @ModelAttribute("usuario") UsuarioEntity usuarioEntity, BindingResult respuesta) {
+//    Forma 1
+//    @RequestMapping("paginaPrincipal")
+//    public ModelAndView paginaPrincipal(@RequestParam("usuario") String usuario, HttpSession sesion) {
+//        ModelAndView mv = new ModelAndView();
+//        mv.setViewName("paginaPrincipal");
+//        sesion.setAttribute("usuario", usuario);
+//        //mv.addObject("usuario", usuario);
+//        return mv;
+//    }
+    
+//    Forma 2
+//    @RequestMapping("paginaPrincipal")
+//    public ModelAndView paginaPrincipal(@RequestParam("usuario") String usuario) {
+//        ModelAndView mv = new ModelAndView();
+//        mv.setViewName("paginaPrincipal");
+//        mv.addObject("usuario", usuario);
+//        return mv;
+//    }
+    
+    //Aqui utilizar el atributo de sesion que se mapeo en accionLogin
+    @RequestMapping("paginaPrincipal")
+    public ModelAndView paginaPrincipal() {
         ModelAndView mv = new ModelAndView();
-        try {
-            if (respuesta.hasErrors()) {
-                mv = new ModelAndView("crearusuario", "usuario", usuarioEntity);
-            } else {
-                if (archivo != null) {
-                    usuarioEntity.setFoto(archivo.getBytes());
-                }
-                UsuarioEntity resultado = usuarioService.agregarUsuario(usuarioEntity);
-                if (resultado != null) {
-                    if (usuarioService.listarUsuario().size() > 5) {
-                        Pageable pagina = PageRequest.of(0, 5);
-                        mv.addObject("paginado", "1");
-                        mv.addObject("listaUsuarios", usuarioService.listarUsuario(pagina));
-                    } else {
-                        mv.addObject("paginado", "0");
-                        mv.addObject("listaUsuarios", usuarioService.listarUsuario());
-                    }
-                    mv.setViewName("mantenimientousuario");                    
-                } else {
-                    mv.setViewName("crearusuario");
-                    mv.addObject("usuario", usuarioEntity);
-                }
-            }
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-            mv.setViewName("crearusuario");
-            mv.addObject("usuario", usuarioEntity);
-        }
+        mv.setViewName("paginaPrincipal");
+        return mv;
+    }
+    
 
+    @RequestMapping("mantenimientoUsuarios")
+    public ModelAndView mantenimientoUsuarios(HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("mantenimientoUsuarios");
+        Integer filasPagina=2;
+        Pageable page = PageRequest.of(0,filasPagina);
+        Integer cantidadPaginas = ((usuarioService.listarUsuario().size()%filasPagina)>0?usuarioService.listarUsuario().size()/filasPagina:(usuarioService.listarUsuario().size()/filasPagina)-1);
+        mv.addObject("cantidadPaginas",cantidadPaginas);
+        mv.addObject("listaUsuarios", usuarioService.listarUsuario(page));
+        return mv;
+    }
+    
+    @RequestMapping("mantenimientoUsuariosPag")
+    public ModelAndView formularioNuevoUsuario(@RequestParam("pag") Integer pag, @RequestParam("orden") String orden ) {
+        Integer filasPagina=2;
+        Pageable page = PageRequest.of(pag, filasPagina);
+        if(orden!=null&&!orden.equalsIgnoreCase("null")&&!orden.isEmpty()){
+            page = PageRequest.of(pag, filasPagina,Sort.by(Sort.Direction.DESC, orden));
+        }
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("mantenimientoUsuarios");
+        Integer cantidadPaginas = ((usuarioService.listarUsuario().size()%filasPagina)>0?usuarioService.listarUsuario().size()/filasPagina:(usuarioService.listarUsuario().size()/filasPagina)-1);
+        mv.addObject("cantidadPaginas",cantidadPaginas);
+        mv.addObject("listaUsuarios", usuarioService.listarUsuario(page));
         return mv;
     }
 
-    //Realiza la accion de actualizar usuario
-    @RequestMapping(value = "actualizarUsuario", consumes = MULTIPART_FORM_DATA_VALUE)
-    public ModelAndView actualizarUsuario(@RequestParam(value = "archivo", required = false) MultipartFile archivo, @Valid @ModelAttribute("usuario") UsuarioEntity usuario, BindingResult respuesta, HttpSession sesion) {
+    @RequestMapping("formularioNuevoUsuario")
+    public ModelAndView formularioNuevoUsuario() {
         ModelAndView mv = new ModelAndView();
-        UsuarioEntity usuarioEntity = null;
+        mv.addObject("usuarioBean", new UsuarioEntity());
+        mv.setViewName("formularioNuevoUsuario");
+        return mv;
+    }
+    
+    @RequestMapping("grabarUsuario")
+    //public ModelAndView grabarUsuario(@RequestParam(value = "archivo", required = false)CommonsMultipartFile archivo, @Valid @ModelAttribute("usuarioBean") UsuarioEntity usuario, BindingResult resultadoValidacion) {
+    public ModelAndView grabarUsuario(@RequestParam(value = "archivo", required = false)MultipartFile archivo, @Valid @ModelAttribute("usuarioBean") UsuarioEntity usuario, BindingResult resultadoValidacion) {
+        ModelAndView mv = new ModelAndView();        
         try {
-            if (archivo != null) {
+            if(archivo.getSize()>0){
                 usuario.setFoto(archivo.getBytes());
             }
-            if (respuesta.hasErrors()) {
-                mv.addObject("usuario", usuario);
-                mv.setViewName("editarusuario");
-            } else {
-                usuarioEntity = usuarioService.actualizarUsuario(usuario);
-                if (usuarioEntity != null) {
-                    if (usuarioService.listarUsuario().size() > 5) {
-                        Pageable pagina = PageRequest.of(0, 5);
-                        mv.addObject("paginado", "1");
-                        mv.addObject("listaUsuarios", usuarioService.listarUsuario(pagina));
-                    } else {
-                        mv.addObject("paginado", "0");
-                        mv.addObject("listaUsuarios", usuarioService.listarUsuario());
-                    }
-                    mv.setViewName("mantenimientousuario");
+            if (resultadoValidacion.hasErrors()) {
+                mv.setViewName("formularioNuevoUsuario");
+                mv.addObject("usuarioBean", usuario);
+            }else{
+                usuario.setEstado(1);
+                Integer registos = usuarioService.insertarUsuario(usuario);
+                if (registos > 0) {
+                    mv.setViewName("redirect:mantenimientoUsuarios");
                 } else {
-                    mv.addObject("usuario", usuario);
-                    mv.addObject("msgError", "Ocurrio un error al registrar");
-                    mv.setViewName("editarusuario");
+                    mv.setViewName("formularioNuevoUsuario");
+                    mv.addObject("usuarioBean", usuario);
                 }
             }
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-            mv.addObject("usuario", usuario);
-            mv.addObject("msgError", "Ocurrio un error al registrar");
-            mv.setViewName("editarusuario");
+            mv.setViewName("formularioNuevoUsuario");
+            mv.addObject("usuarioBean", usuario);
+            mv.addObject("msgError", "Ocurrio un error al registrar lo datos intentelo nuevamente");
         }
         return mv;
     }
 
-    //Realiza la accion de eliminar usuario
     @RequestMapping("eliminarUsuario")
-    public ModelAndView eliminarUsuario(Integer idUsuario, Model modelo) {
+    public ModelAndView eliminarUsuario(Integer idUsuario) {
         ModelAndView mv = new ModelAndView();
-        Integer contador = usuarioService.eliminarUsuario(idUsuario);
-        if (contador >= 0) {
-            if (usuarioService.listarUsuario().size() > 5) {
-                Pageable pagina = PageRequest.of(0, 5);
-                mv.addObject("paginado", "1");
-                mv.addObject("listaUsuarios", usuarioService.listarUsuario(pagina));
-            } else {
-                mv.addObject("paginado", "0");
-                mv.addObject("listaUsuarios", usuarioService.listarUsuario());
-            }
-            mv.setViewName("mantenimientousuario");            
-        } else {
-            if (usuarioService.listarUsuario().size() > 5) {
-                Pageable pagina = PageRequest.of(0, 5);
-                mv.addObject("paginado", "1");
-                mv.addObject("listaUsuarios", usuarioService.listarUsuario(pagina));
-            } else {
-                mv.addObject("paginado", "0");
-                mv.addObject("listaUsuarios", usuarioService.listarUsuario());
-            }
-            mv.addObject("msgError", "No se pudo Elimianr el Registro");
-            mv.setViewName("mantenimientousuario");
+        try {
+            usuarioService.eliminarUsuario(idUsuario);
+            mv.setViewName("redirect:mantenimientoUsuarios");
+        } catch (Exception ex) {
+            mv.setViewName("mantenimientoUsuarios");
+            mv.addObject("listaUsuarios", usuarioService.listarUsuario());
+            mv.addObject("msgError", "No se puedo eliminar");
         }
+
         return mv;
     }
 
-    //Muestra una foto
-    @RequestMapping("mostrarFoto")
-    public String mostrarFoto(HttpServletRequest request, Model modelo) {
-        UsuarioEntity usuario = usuarioService.obtenerUsuario(Integer.parseInt(request.getParameter("idUsuario")));
-        modelo.addAttribute("usuario", usuario);
-        return "fotousuario";
-    }
 }

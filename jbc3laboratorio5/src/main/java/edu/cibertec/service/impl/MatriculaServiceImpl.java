@@ -7,7 +7,7 @@ package edu.cibertec.service.impl;
 import edu.cibertec.entity.AuditoriaEntity;
 import edu.cibertec.entity.MatriculaEntity;
 import edu.cibertec.repository.AuditoriaRepository;
-import edu.cibertec.repository.MatriculaRepositry;
+import edu.cibertec.repository.MatriculaRepository;
 import edu.cibertec.service.MatriculaService;
 import java.util.Date;
 import java.util.List;
@@ -24,23 +24,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class MatriculaServiceImpl implements MatriculaService{
 
     @Autowired
-    private  MatriculaRepositry matriculaRepository;
+    private MatriculaRepository matriculaRepository;
     @Autowired
-    private  AuditoriaRepository auditoriaRepositoory;
+    private AuditoriaRepository auditoriaRepository;
     
     @Override
     public List<MatriculaEntity> listarMatriculas() {
         return matriculaRepository.findAll();
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation=Propagation.REQUIRED)
     @Override
-    public MatriculaEntity grabarMatricula(MatriculaEntity matricula) {
-        MatriculaEntity me=matriculaRepository.save(matricula);
-        //AuditoriaEntity ae=new AuditoriaEntity(new Date(), null, "SE INSERTO LA MATRICULA "+me.getIdMatricula()); //CON EL ERROR
-        AuditoriaEntity ae=new AuditoriaEntity(new Date(), me.getUsuario(), "SE INSERTO LA MATRICULA "+me.getIdMatricula()); // SIN EL ERROR 
-        ae = auditoriaRepositoory.save(ae);      
-        return me;
+    public MatriculaEntity grabarMatricula(MatriculaEntity matriculaEntity) {
+        matriculaEntity=matriculaRepository.save(matriculaEntity);
+        AuditoriaEntity auditoria = new AuditoriaEntity(new Date(),matriculaEntity.getUsuario(), "Insertando la matricula"+matriculaEntity.getIdMatricula());
+        auditoriaRepository.save(auditoria);
+        return matriculaEntity;
     }
     
 }

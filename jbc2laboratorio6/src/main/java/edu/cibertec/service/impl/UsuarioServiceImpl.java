@@ -1,16 +1,15 @@
-package edu.cibertec.service.impl;
-
-import edu.cibertec.bean.Usuario;
-import edu.cibertec.repository.UsuarioDao;
-import edu.cibertec.service.UsuarioService;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+package edu.cibertec.service.impl;
+
+import edu.cibertec.entity.UsuarioEntity;
+import edu.cibertec.repository.UsuarioRepository;
+import edu.cibertec.service.UsuarioService;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
@@ -18,37 +17,38 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UsuarioServiceImpl implements UsuarioService{
-
+    
     @Autowired
-    private UsuarioDao usuarioDao;
+    private UsuarioRepository usuarioRepository;
+    
     @Override
-    public Usuario validarLogin(Usuario usuario) {
-        return usuarioDao.validarLogin(usuario);
+    public UsuarioEntity validarUsuario(UsuarioEntity usuario) {
+       return usuarioRepository.validarUsuario(usuario);
     }
 
     @Override
-    public List<Usuario> listarUsuarios() {
-        return usuarioDao.listarUsuarios();
+    public List<UsuarioEntity> listarUsuario() {
+        return usuarioRepository.listarUsuario();
+    }
+    
+    @Override
+    public UsuarioEntity obtenerUsuario(Integer idUsuario) {
+        return usuarioRepository.obtenerUsuario(idUsuario);
     }
 
     @Override
-    public Usuario obtenerUsuario(Integer idUsuario) {
-        return usuarioDao.obtenerUsuario(idUsuario);   
+    public Integer insertarUsuario(UsuarioEntity usuario) {
+        return usuarioRepository.insertarUsuario(usuario);
     }
 
     @Override
-    public Integer registrarUsuario(Usuario usuario) {
-        return usuarioDao.registrarUsuario(usuario);  
-    }
-
-    @Override
-    public Integer actualizarUsuario(Usuario usuario) {
-        return usuarioDao.actualizarUsuario(usuario);  
+    public Integer actualizarUsuario(UsuarioEntity usuario) {
+        return usuarioRepository.actualizarUsuario(usuario);
     }
 
     @Override
     public Integer eliminarUsuario(Integer idUsuario) {
-        return usuarioDao.eliminarUsuario(idUsuario);  
+        return usuarioRepository.eliminarUsuario(idUsuario);
     }
     
 }

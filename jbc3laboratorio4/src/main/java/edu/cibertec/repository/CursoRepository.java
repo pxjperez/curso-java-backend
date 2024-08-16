@@ -17,21 +17,35 @@ import org.springframework.stereotype.Repository;
  * @author jpere
  */
 @Repository
-public interface CursoRepository extends JpaRepository<CursoEntity,Integer>{
-    //Consulta de cursos por estado de forma no nativa
-    @Query("SELECT c FROM CursoEntity c WHERE c.estado=?1") //?1 esta forma respeta el orden de como se ingresa los parametros de entrada
-    public List<CursoEntity> consultarPorEstado(Integer estado);
-    //Consulta de los cursos biertos no completos de manera directa con el namedQuery
-    //Trae la consulta desde el NamedQuery de la entidad
-    public List<CursoEntity> abiertoIncompleto();
-    //Consulta de cursos por fecha de inicio de forma nativa
-    @Query(value = "SELECT * FROM curso WHERE fechaInicio>=?1",nativeQuery =true ) 
-    public List<CursoEntity> consultarPorFecha(Date fechaInicio);
-    //Consulta por numero de alumnos que falta completar para llenar el curso
-    @Query(value = "SELECT * FROM curso WHERE (alumnosMin-alumnosAct)>=:cantidad",nativeQuery =true ) 
-    public List<CursoEntity> consultarPorFaltantes(@Param("cantidad")Integer cantidad);
-    //Consulta de cursos por su nombre 
-    //Llamando a un Store procedure
-    @Query(value = "CALL Curso_Por_Nombre(:cadena)",nativeQuery =true ) 
-    public List<CursoEntity> consultarPorNombre(@Param("cadena")String cadena);    
+public interface CursoRepository extends JpaRepository<CursoEntity, Integer>{
+    //Consulta por nombre de curso
+    public List<CursoEntity> findByNombreCursoContainingIgnoreCase(String nombreCurso);//Aqui no se necesita agregar un query por que el framework entiende el lenguaje
+    
+    //Consulta por nombre de curso y alumnos minimo
+    public List<CursoEntity> findByNombreCursoAndAlumnosMinimo(String nombreCurso, Integer alumnosMinimo); //Aqui no se necesita agregar un query por que el framework entiende el lenguaje
+    
+    //Consulta de cursos por estado (Por posicion)
+    @Query("SELECT c FROM CursoEntity c WHERE c.estado=?1")
+    public List<CursoEntity> consultarPorEstado(Integer estado);//El parametro de entrada esta dado por la posicion del signo de pregunta
+    
+    //Consulta de curso abiertos pero aun no completros
+    public List<CursoEntity> abiertoIncompleto();//El framwork trae la consulta del NamedQuery definido en la entidad
+    
+    //Consulta de curso abiertos pero aun no completros nativo
+    public List<CursoEntity> abiertoIncompletoNativo();//El framwork trae la consulta del NamedNativeQuery definido en la entidad
+    
+    //Consulta de cursos despues de una fecha x (Por parametro)
+    @Query("SELECT c FROM CursoEntity c WHERE c.fechaInicio>=:fecha")
+    public List<CursoEntity> consultarPorFecha(@Param("fecha")Date fecha);
+    
+    //Consulta de cursos a los que les falta x numero de alumnos para llenarce
+    @Query(value = "SELECT * FROM curso WHERE (alumnosmin - alumnosact)=:cantidad", nativeQuery = true)
+    public List<CursoEntity> consultarFaltantes(@Param("cantidad")Integer cantidad);
+    
+    //Consulta de cursos por nombre invocando a un stored procedure
+    @Query(value = "CALL Curso_Por_Nombre(:nombre)" , nativeQuery =true)
+    public List<CursoEntity> consultarPorNombre(@Param("nombre")String nombre);
+    
+    
+    
 }

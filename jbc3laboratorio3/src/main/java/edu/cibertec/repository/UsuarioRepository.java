@@ -6,31 +6,27 @@ package edu.cibertec.repository;
 
 import edu.cibertec.entity.UsuarioEntity;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.repository.RepositoryDefinition;
 import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author jpere
  */
+//@RepositoryDefinition(domainClass =UsuarioEntity.class, idClass = Integer.class)
 @Repository
-public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Integer> {
-    //Por consulta DSL
-    //El patron es findBy(nombre atributo 1)And(nombre atributo 2)
-    public UsuarioEntity findByUserAndClave(String user, String clave);
-    //Por Query Nativa
-    @Query(value = "SELECT * FROM usuario WHERE usuario=:user AND clave=:clave", nativeQuery =true )
-    public UsuarioEntity validarUserClave(@Param("user")String user, @Param("clave")String clave);
-    //Por Query Nativa
-    @Query(value = "CALL validar_usuario_clave(:user, :clave)", nativeQuery =true )
-    public UsuarioEntity validarUserClaveProcedure(@Param("user")String user, @Param("clave")String clave);
-    //Por Query Nativa
-    @Query(value = "SELECT U FROM UsuarioEntity U WHERE U.user=:user AND U.clave=:clave", nativeQuery =false )
-    public UsuarioEntity validarUserClaveNoNativa(@Param("user")String user, @Param("clave")String clave);
+public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Integer>{
     
-    @Query(value = "SELECT * FROM usuario WHERE nombreapellido like %:nombreapellido%", nativeQuery =true )
-    public List<UsuarioEntity> listarUsuarioPorNombreApellido(@Param("nombreapellido")String nombreApellido);
+    @Query(value = "SELECT * FROM usuario WHERE usuario=?1 AND clave=?2", nativeQuery = true)
+    public UsuarioEntity validarUsuario(String user, String password); 
+    
+    public UsuarioEntity findByUserAndPassword(String user, String password); //SELECT * FROM usuario WHERE usuario=?1 AND clave=?2 
+    
+    public List<UsuarioEntity> findByEstado(Integer estado);//SELECT * FROM USUARIO WHERE ESTADO=?1
+    
+    public List<UsuarioEntity> findByEstado(Integer estado, Pageable page);
     
 }

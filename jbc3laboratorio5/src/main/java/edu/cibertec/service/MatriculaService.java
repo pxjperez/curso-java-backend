@@ -13,5 +13,5 @@ import java.util.List;
  */
 public interface MatriculaService {
     public List<MatriculaEntity> listarMatriculas();
-    public MatriculaEntity grabarMatricula(MatriculaEntity matricula);
+    public MatriculaEntity grabarMatricula(MatriculaEntity matriculaEntity);
 }

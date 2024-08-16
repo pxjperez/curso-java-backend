@@ -4,38 +4,32 @@
  */
 package edu.cibertec.controller;
 
-import edu.cibertec.beans.Conexion;
-import edu.cibertec.beans.HolaMundo;
-import edu.cibertec.config.AppConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import edu.cibertec.config.AppConfing;
+import edu.cibertec.service.Conexion;
+import edu.cibertec.service.HolaMundo;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
  * @author jpere
  */
 public class Ejecutora {
-    @Autowired
-    @Qualifier("conexionPostges") 
-    private static Conexion conexion;
-    
-
     public static void main(String[] args) {
-        //ApplicationContext contexto = new ClassPathXmlApplicationContext("beans.xml");
-        ApplicationContext contexto = new AnnotationConfigApplicationContext(AppConfig.class);
-        HolaMundo hm = (HolaMundo) contexto.getBean("holaMundoBean"); // HolaMundo holaMundoBean = new HolaMundo();
-        hm.saludar();
-        HolaMundo hm1 = (HolaMundo) contexto.getBean("holaMundoBeanConPropiedad"); // HolaMundo holaMundoBean = new HolaMundo(); holaMundoBean.setNombre("JPEREZGIL");
+        //ApplicationContext cxt = new ClassPathXmlApplicationContext("beans.xml");
+        ApplicationContext cxt = new AnnotationConfigApplicationContext(AppConfing.class);
+        HolaMundo hm1 = (HolaMundo) cxt.getBean("holaMundoBean");
         hm1.saludar();
-        HolaMundo hm2 = (HolaMundo) contexto.getBean("holaMundoBean"); // HolaMundo holaMundoBean = new HolaMundo();
-        System.out.println("==BEANS==");
-        hm.saludar();
-        hm.setNombre("PEDRO");
-        hm2.saludar();
-        Conexion cx = (Conexion) contexto.getBean("miConexion"); // HolaMundo holaMundoBean = new HolaMundo();
-        cx.obtenerConexion(); 
-        //conexion.obtenerConexion();
+        HolaMundo hm2 = (HolaMundo) cxt.getBean("holaMundoBeanConPropiedades");
+        hm2.saludar();        
+        HolaMundo hm3 = (HolaMundo) cxt.getBean("holaMundoBeanConPropiedades");
+        hm3.setNombre("Daniel");
+        hm2.saludar();//Juan
+        hm3.saludar();//Daniel
+        Conexion cn  = (Conexion) cxt.getBean("conexionMysql");
+        cn.obtenerConexion();
+        cn  = (Conexion) cxt.getBean("conexionPostgres");
+        cn.obtenerConexion();
     }
 }

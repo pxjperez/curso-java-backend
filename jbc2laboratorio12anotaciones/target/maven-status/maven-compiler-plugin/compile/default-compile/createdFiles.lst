@@ -1,0 +1,4 @@
+edu\cibrtec\entity\PersonaEntity.class
+edu\cibertec\config\DispatcherServlet.class
+edu\cibertec\config\WebConfig.class
+edu\cibertec\controller\SaludoController.class

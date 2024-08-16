@@ -9,14 +9,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <exec.mainClass>edu.cibertec.controller.Ejecutora2</exec.mainClass>
+        <exec.mainClass>edu.cibertec.controller.Ejecutora</exec.mainClass>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>6.0.11</version>
+            <version>6.1.5</version>
         </dependency>
     </dependencies>
-    <name>jbc1laboratorio2anotaciones</name>
 </project>

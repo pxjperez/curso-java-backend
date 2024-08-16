@@ -1,6 +1,6 @@
-edu\cibertec\beans\HolaMundo.class
-edu\cibertec\beans\Conexion.class
-edu\cibertec\beans\ConexionMysql.class
+edu\cibertec\service\Conexion.class
+edu\cibertec\service\HolaMundo.class
+edu\cibertec\config\AppConfing.class
+edu\cibertec\service\ConexionPostgres.class
+edu\cibertec\service\ConexionMysql.class
 edu\cibertec\controller\Ejecutora.class
-edu\cibertec\beans\ConexionPostges.class
-edu\cibertec\config\AppConfig.class

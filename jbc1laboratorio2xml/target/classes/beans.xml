@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+        
+        <bean id="holaMundoBean" class="edu.cibertec.bean.HolaMundo"/>
+        <bean id="holaMundoBeanConPropiedades" class="edu.cibertec.bean.HolaMundo"> <!-- Siguiero especificar que la creacion del bean es nueva por cada invocacion scope="prototype" --> 
+            <property name="nombre" value="Juan"/>
+        </bean>
+        <bean id="conexionMysql" class="edu.cibertec.bean.ConexionMysql"/>
+        <bean id="conexionPostgres" class="edu.cibertec.bean.ConexionPostgres"/>
+        
+        <bean id="documentoTexto" class="edu.cibertec.bean.DocumentoTexto"/>
+        <bean id="documentoExcel" class="edu.cibertec.bean.DocumentoExcel"/>
+        <bean id="impresoraServiceExcel" class="edu.cibertec.service.ImpresoraService">
+            <property name="documento" ref="documentoExcel"/>
+        </bean>
+        <bean id="impresoraServiceExcelConstructor" class="edu.cibertec.service.ImpresoraService">
+            <constructor-arg ref="documentoExcel" />
+        </bean>
+        <bean id="impresoraServiceTexto" class="edu.cibertec.service.ImpresoraService">
+            <property name="documento" ref="documentoTexto"/>
+        </bean>
+        <bean id="impresoraServiceTextoConstructor" class="edu.cibertec.service.ImpresoraService">
+            <constructor-arg ref="documentoTexto" />
+        </bean>
+        
+</beans>

@@ -1,6 +1,6 @@
-C:\Users\jpere\Documents\NetBeansProjects\JAVA_BACKEND\jbc1laboratorio1anotaciones\src\main\java\edu\cibertec\controller\Ejecutora.java
-C:\Users\jpere\Documents\NetBeansProjects\JAVA_BACKEND\jbc1laboratorio1anotaciones\src\main\java\edu\cibertec\beans\Conexion.java
-C:\Users\jpere\Documents\NetBeansProjects\JAVA_BACKEND\jbc1laboratorio1anotaciones\src\main\java\edu\cibertec\beans\HolaMundo.java
-C:\Users\jpere\Documents\NetBeansProjects\JAVA_BACKEND\jbc1laboratorio1anotaciones\src\main\java\edu\cibertec\config\AppConfig.java
-C:\Users\jpere\Documents\NetBeansProjects\JAVA_BACKEND\jbc1laboratorio1anotaciones\src\main\java\edu\cibertec\beans\ConexionMysql.java
-C:\Users\jpere\Documents\NetBeansProjects\JAVA_BACKEND\jbc1laboratorio1anotaciones\src\main\java\edu\cibertec\beans\ConexionPostges.java
+C:\Users\jpere\Documents\NetBeansProjects\JAVA_BACKEND_3\jbc1laboratorio2conanotaciones\src\main\java\edu\cibertec\service\Conexion.java
+C:\Users\jpere\Documents\NetBeansProjects\JAVA_BACKEND_3\jbc1laboratorio2conanotaciones\src\main\java\edu\cibertec\service\ConexionPostgres.java
+C:\Users\jpere\Documents\NetBeansProjects\JAVA_BACKEND_3\jbc1laboratorio2conanotaciones\src\main\java\edu\cibertec\service\ConexionMysql.java
+C:\Users\jpere\Documents\NetBeansProjects\JAVA_BACKEND_3\jbc1laboratorio2conanotaciones\src\main\java\edu\cibertec\controller\Ejecutora.java
+C:\Users\jpere\Documents\NetBeansProjects\JAVA_BACKEND_3\jbc1laboratorio2conanotaciones\src\main\java\edu\cibertec\config\AppConfing.java
+C:\Users\jpere\Documents\NetBeansProjects\JAVA_BACKEND_3\jbc1laboratorio2conanotaciones\src\main\java\edu\cibertec\service\HolaMundo.java

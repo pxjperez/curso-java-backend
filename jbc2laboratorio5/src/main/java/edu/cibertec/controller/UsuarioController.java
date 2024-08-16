@@ -4,19 +4,19 @@
  */
 package edu.cibertec.controller;
 
-import edu.cibertec.bean.Usuario;
+import edu.cibertec.entity.UsuarioEntity;
 import edu.cibertec.service.UsuarioService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -25,141 +25,117 @@ import org.springframework.web.servlet.ModelAndView;
  * @author jpere
  */
 @Controller
-@SessionAttributes({"usuario","contador"}) // Esta anotacion nos permite especificar que cualquier atributo que se defina con este nombre va a ser una sesion
+@SessionAttributes("usuario")
 public class UsuarioController {
 
-    @Autowired
+    @Autowired //usuarioService= new UsuarioServiceImp();
     private UsuarioService usuarioService;
-    
-    //Carga la vista del Login
+
     @RequestMapping("/")
-    public String mostrarLogin() {
+    public String login() {
         return "login";
     }
 
-    //Realiza la accion de logear
-    //La mas utilizada para interceptar los valores que vienen del request
-    @RequestMapping("logear")
-    public ModelAndView logear(Usuario usuario) {//Si quiere trabajar con la sesion sin la anotacion agregan HttpSession sesion entrada en el metodo
+    @RequestMapping("accionLogin")
+    public ModelAndView accionLogin(UsuarioEntity usuario) {
         ModelAndView mv = new ModelAndView();
-        if (usuario.getUser()!= null && usuario.getPassword()!= null) {
-            usuario=usuarioService.validarLogin(usuario);
-            if(usuario!=null){
-                //sesion.setAttribute("usuario", usuario);  //Descomentar esta linea si se quiere trabajar la sesion sin la anotacion
-                mv.addObject("usuario",usuario); //Comentar esta linea si se quiere trabajar la sesion sin la anotacion
-                mv.addObject("contador",0);
-                mv.setViewName("index");
-            }else{
-                mv.addObject("msgError", "Usuario y contraseña no validos");
-                mv.setViewName("login");
-            }            
-        }else{
-            mv.addObject("msgError", "No se ingreso un Usuario y Password valido");
+        usuario = usuarioService.validarUsuario(usuario);
+        if (usuario == null) {
             mv.setViewName("login");
+            mv.addObject("msgError", "Usuario o contraseña invalidos");
+        } else {
+            mv.addObject("usuario", usuario.getNombreCompleto());
+            mv.setViewName("redirect:paginaPrincipal");
         }
         return mv;
     }
+
+//    Forma 1
+//    @RequestMapping("paginaPrincipal")
+//    public ModelAndView paginaPrincipal(@RequestParam("usuario") String usuario, HttpSession sesion) {
+//        ModelAndView mv = new ModelAndView();
+//        mv.setViewName("paginaPrincipal");
+//        sesion.setAttribute("usuario", usuario);
+//        //mv.addObject("usuario", usuario);
+//        return mv;
+//    }
     
-    //Carga la vista de Mantenimiento Usuario
-    @RequestMapping("mantenimientoUsuario")
-    public ModelAndView mantenimientoUsuario() {
+//    Forma 2
+//    @RequestMapping("paginaPrincipal")
+//    public ModelAndView paginaPrincipal(@RequestParam("usuario") String usuario) {
+//        ModelAndView mv = new ModelAndView();
+//        mv.setViewName("paginaPrincipal");
+//        mv.addObject("usuario", usuario);
+//        return mv;
+//    }
+    
+    //Aqui utilizar el atributo de sesion que se mapeo en accionLogin
+    @RequestMapping("paginaPrincipal")
+    public ModelAndView paginaPrincipal() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("paginaPrincipal");
+        return mv;
+    }
+    
+
+    @RequestMapping("mantenimientoUsuarios")
+    public ModelAndView mantenimientoUsuarios(HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("mantenimientoUsuarios");
+        //mv.addObject("usuario", request.getParameter("usuario"));
+        mv.addObject("listaUsuarios", usuarioService.listarUsuario());
+        return mv;
+    }
+
+    @RequestMapping("formularioNuevoUsuario")
+    public ModelAndView formularioNuevoUsuario() {
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("usuarioBean", new UsuarioEntity());
+        mv.setViewName("formularioNuevoUsuario");
+        return mv;
+    }
+
+    @RequestMapping("grabarUsuario")
+    //public ModelAndView grabarUsuario(@RequestParam(value = "archivo", required = false)CommonsMultipartFile archivo, @Valid @ModelAttribute("usuarioBean") UsuarioEntity usuario, BindingResult resultadoValidacion) {
+    public ModelAndView grabarUsuario(@RequestParam(value = "archivo", required = false)MultipartFile archivo, @Valid @ModelAttribute("usuarioBean") UsuarioEntity usuario, BindingResult resultadoValidacion) {
         ModelAndView mv = new ModelAndView();        
-        mv.addObject("listaUsuarios",usuarioService.listarUsuarios());
-        mv.setViewName("mantenimientousuario");
-        return mv;
-    }
-    
-    //Carga la vista del formulario crear usuario
-    @RequestMapping("crearUsuario")
-    public String crearUsuario(Model model) {
-        model.addAttribute("usuario", new Usuario());
-        return "crearusuario";
-    }
-    
-    //Carga la vista del formulario editar usuario
-    @RequestMapping("editarUsuario")
-    public String crearUsuario(Integer idUsuario, Model model) {
-        model.addAttribute("usuario",usuarioService.obtenerUsuario(idUsuario));
-        return "editarusuario";
-    }
-    
-    //Realiza la accion de registrar usuario
-    @RequestMapping("registrarUsuario")
-    public ModelAndView registrarUsuario(@RequestParam(value = "archivo", required = false)CommonsMultipartFile archivo,@Valid @ModelAttribute("usuario")Usuario usuario, BindingResult resutado,HttpServletRequest request) {
-        ModelAndView mv = new ModelAndView();  
-        if(archivo!=null){
-          usuario.setFoto(archivo.getBytes());  
-        }
-        if(resutado.hasErrors()){
-            mv.addObject("usuario", usuario);
-            mv.setViewName("crearusuario");
-        }else{
-            Integer contador=usuarioService.registrarUsuario(usuario);
-            if(contador>=0){
-               mv.addObject("listaUsuarios", usuarioService.listarUsuarios());
-               Integer contadorSesion = Integer.valueOf(request.getSession().getAttribute("contador").toString());
-               contadorSesion++;
-               mv.addObject("contador", contadorSesion);
-               mv.setViewName("mantenimientousuario"); 
-            }else{
-                mv.addObject("usuario",usuario);
-                mv.addObject("msgError","Ocurrio un error al registrar");
-                mv.setViewName("crearusuario");
+        try {
+            if(archivo!=null){
+                usuario.setFoto(archivo.getBytes());
             }
-        }
-        return mv;
-    }
-    
-    //Realiza la accion de actualizar usuario
-    @RequestMapping("actualizarUsuario")
-    public ModelAndView actualizarUsuario(@RequestParam(value = "archivo", required = false)CommonsMultipartFile archivo,@Valid @ModelAttribute("usuario")Usuario usuario, BindingResult resutado,HttpSession sesion) {
-        ModelAndView mv = new ModelAndView();   
-        if(archivo!=null){
-          usuario.setFoto(archivo.getBytes());  
-        }
-        if(resutado.hasErrors()){
-            mv.addObject("usuario", usuario);
-            mv.setViewName("editarusuario");
-        }else{
-            Integer contador=usuarioService.actualizarUsuario(usuario);
-            if(contador>=0){
-               mv.addObject("listaUsuarios", usuarioService.listarUsuarios());
-               Integer contadorSesion = Integer.valueOf(sesion.getAttribute("contador").toString());
-               contadorSesion++;
-               mv.addObject("contador", contadorSesion);
-               mv.setViewName("mantenimientousuario"); 
+            if (resultadoValidacion.hasErrors()) {
+                mv.setViewName("formularioNuevoUsuario");
+                mv.addObject("usuarioBean", usuario);
             }else{
-                mv.addObject("usuario",usuario);
-                mv.addObject("msgError","Ocurrio un error al registrar");
-                mv.setViewName("editarusuario");
+                Integer registos = usuarioService.insertarUsuario(usuario);
+                if (registos > 0) {
+                    mv.setViewName("redirect:mantenimientoUsuarios");
+                } else {
+                    mv.setViewName("formularioNuevoUsuario");
+                    mv.addObject("usuarioBean", usuario);
+                }
             }
+        } catch (Exception ex) {
+            mv.setViewName("formularioNuevoUsuario");
+            mv.addObject("usuarioBean", usuario);
+            mv.addObject("msgError", "Ocurrio un error al registrar lo datos intentelo nuevamente");
         }
         return mv;
     }
-    
-    //Realiza la accion de eliminar usuario
+
     @RequestMapping("eliminarUsuario")
-    public ModelAndView eliminarUsuario(Integer idUsuario,Model modelo) {
-        ModelAndView mv = new ModelAndView();     
-         Integer contador=usuarioService.eliminarUsuario(idUsuario);
-            if(contador>=0){
-               mv.addObject("listaUsuarios", usuarioService.listarUsuarios());
-               Integer contadorSesion = Integer.valueOf(modelo.getAttribute("contador").toString());
-               contadorSesion++;
-               mv.addObject("contador", contadorSesion);
-               mv.setViewName("mantenimientousuario"); 
-            }else{
-                mv.addObject("listaUsuarios", usuarioService.listarUsuarios());
-                mv.addObject("msgError","No se pudo Elimianr el Registro");
-                mv.setViewName("mantenimientousuario");
-            }
+    public ModelAndView eliminarUsuario(Integer idUsuario) {
+        ModelAndView mv = new ModelAndView();
+        try {
+            usuarioService.eliminarUsuario(idUsuario);
+            mv.setViewName("redirect:mantenimientoUsuarios");
+        } catch (Exception ex) {
+            mv.setViewName("mantenimientoUsuarios");
+            mv.addObject("listaUsuarios", usuarioService.listarUsuario());
+            mv.addObject("msgError", "No se puedo eliminar");
+        }
+
         return mv;
     }
-    
-    //Muestra una foto
-    @RequestMapping("mostrarFoto")
-    public String mostrarFoto(HttpServletRequest request, Model modelo){
-        modelo.addAttribute("usuario", usuarioService.obtenerUsuario(Integer.parseInt(request.getParameter("idUsuario"))));
-        return "fotousuario";
-    }
+
 }

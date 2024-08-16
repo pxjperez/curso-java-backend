@@ -11,64 +11,57 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author jpere
  */
 @Service
-public class UsuarioServiceImpl implements UsuarioService{
+public class UsuarioServiceImpl implements UsuarioService {
+
     @Autowired
     private UsuarioRepository usuarioRepository;
-    
+
     @Override
     public UsuarioEntity validarUsuario(UsuarioEntity usuario) {
-       return usuarioRepository.validarUserClaveProcedure(usuario.getUser(), usuario.getClave());
+        return usuarioRepository.findByUserAndPassword(usuario.getUser(), usuario.getPassword());
     }
 
     @Override
     public List<UsuarioEntity> listarUsuario() {
-        return usuarioRepository.findAll();
-    }
-    
-    @Override
-    public List<UsuarioEntity> listarUsuario(Pageable pagina) {
-        return usuarioRepository.findAll(pagina).getContent();
+        return usuarioRepository.findByEstado(1);
     }
 
+    @Override
+    public List<UsuarioEntity> listarUsuario(Pageable page) {
+        return usuarioRepository.findByEstado(1,page);
+    }
+    
     @Override
     public UsuarioEntity obtenerUsuario(Integer idUsuario) {
         return usuarioRepository.findById(idUsuario).get();
     }
 
     @Override
-    public List<UsuarioEntity> listarUsuarioPorNombreApellido(String nombreApellido) {
-        return usuarioRepository.listarUsuarioPorNombreApellido(nombreApellido);
-    }
-
-    @Override
-    @Transactional
-    public UsuarioEntity agregarUsuario(UsuarioEntity usuario) {
-        UsuarioEntity resultado=null;
-        try{
-            resultado=usuarioRepository.save(usuario);
-        }catch(Exception ex){
-            resultado=null;
-            System.out.println(ex.getMessage());
+    public Integer insertarUsuario(UsuarioEntity usuario) {
+        Integer resultado = 0;
+        usuario = usuarioRepository.save(usuario);
+        if (usuario != null) {
+            resultado = 1;
+        } else {
+            resultado = 0;
         }
         return resultado;
     }
 
     @Override
-    @Transactional
-    public UsuarioEntity actualizarUsuario(UsuarioEntity usuario) {
-        UsuarioEntity resultado=null;
-        try{
-            resultado=usuarioRepository.save(usuario);
-        }catch(Exception ex){
-            resultado=null;
-            System.out.println(ex.getMessage());
+    public Integer actualizarUsuario(UsuarioEntity usuario) {
+        Integer resultado = 0;
+        usuario = usuarioRepository.save(usuario);
+        if (usuario != null) {
+            resultado = 1;
+        } else {
+            resultado = 0;
         }
         return resultado;
     }
@@ -76,13 +69,15 @@ public class UsuarioServiceImpl implements UsuarioService{
     @Override
     public Integer eliminarUsuario(Integer idUsuario) {
         Integer resultado = 0;
-        try{
-            usuarioRepository.deleteById(idUsuario);
-            resultado=1;
-        }catch(Exception ex){
-            resultado=0;
+        UsuarioEntity usuario = usuarioRepository.findById(idUsuario).get();
+        usuario.setEstado(0);
+        usuario = usuarioRepository.save(usuario);
+        if (usuario != null) {
+            resultado = 1;
+        } else {
+            resultado = 0;
         }
         return resultado;
     }
-    
+
 }

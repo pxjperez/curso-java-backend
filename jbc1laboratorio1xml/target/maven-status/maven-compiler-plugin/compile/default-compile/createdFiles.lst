@@ -1,2 +1,5 @@
-edu\cibertec\beans\HolaMundo.class
+edu\cibertec\service\Conexion.class
+edu\cibertec\service\HolaMundo.class
+edu\cibertec\service\ConexionPostgres.class
+edu\cibertec\service\ConexionMysql.class
 edu\cibertec\controller\Ejecutora.class

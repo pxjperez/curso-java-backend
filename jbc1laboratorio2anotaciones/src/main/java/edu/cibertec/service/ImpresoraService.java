@@ -4,7 +4,7 @@
  */
 package edu.cibertec.service;
 
-import edu.cibertec.beans.Documento;
+import edu.cibertec.bean.Imprimible;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -13,27 +13,34 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * @author jpere
  */
 public class ImpresoraService {
-//    @Autowired
-//    @Qualifier("documentoExcel")
-    private Documento documento;
+        
+    @Autowired
+    @Qualifier("documentoExcel")
+    private Imprimible documento;
+    @Autowired
+    @Qualifier("documentoTexto")
+    private Imprimible documentoTexto; //Imprimible documentoTexto = new DocumentoTexto();
 
     public ImpresoraService() {
     }
-//    @Autowired
-//    @Qualifier("documentoExcel")
-    public ImpresoraService(Documento documento) {
+
+    public ImpresoraService(Imprimible documento) {
         this.documento = documento;
     }
 
-    public Documento getDocumento() {
+    public Imprimible getDocumento() {
         return documento;
     }
 
-    public void setDocumento(Documento documento) {
+    public void setDocumento(Imprimible documento) {
         this.documento = documento;
     }
     
-    public void imprimir(){
-        documento.imprimir();
+    public void imprimirDocumento(){
+        System.out.println(documento.imprimir());
     }
+    public void imprimirDocumentoTexto(){
+        System.out.println(documentoTexto.imprimir());
+    }
+    
 }
