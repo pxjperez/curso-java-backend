@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MANTENIMIENTO CURSOS</title>
+    </head>
+    <body>
+        <h1>MANTENIMIENTO CURSOS</h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Fecha</th>
+                    <th>Alumnos Minimo</th>
+                    <th>Alumnos Actual</th>
+                    <th>Operaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="curso : ${listaCursos}">
+                    <td th:text="${curso.idCurso}"></td>
+                    <td th:text="${curso.nombreCurso}"></td>
+                    <td th:text="${curso.fechaInicio}"></td>
+                    <td th:text="${curso.alumnosMinimo}"></td>
+                    <td th:text="${curso.alumnosActual}"></td>
+                    <td>
+                        <a th:href="@{'/editarCurso?idCurso=' + ${curso.idCurso}}">Editar</a>
+                        <a th:href="@{'/eliminarCurso?idCurso=' + ${curso.idCurso}}">Eliminar</a>
+                    </td>                    
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
